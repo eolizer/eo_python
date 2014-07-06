@@ -8,6 +8,15 @@ import matplotlib.mlab as mlab
 from jmlog2csv import jmlog2csv
 
 
+graph_messages = ("Building Threads-Rate dependency graph...",\
+	"Building Threads-Average reply time dependency graph...",\
+	"Building Threads-Errors dependency graph...",\
+	"Building Time-Rate dependency graph...",
+	"Building Time-Reply time dependency graph...",\
+	"Building Time-Maximum Reply time dependency graph...",\
+	"Building Time-Errors time dependency graph...")
+
+
 
 def main(argv):
 	jml = jmlog2csv(argv)
@@ -21,12 +30,15 @@ def main(argv):
 		sys.exit(2)
 
 	
-	# Graphs by threads	
+	#+++++++++++++++++++#
+	# Graphs by threads	#
+	#+++++++++++++++++++#
+
 	inp_data = np.sort(inp_csv_data, order="step_active_threads")
 	xval = [ x for x in inp_data.step_active_threads if x != -1]
 	
 	# Threads-Rate dependency graph
-	sys.stdout.write("Building Threads-Rate dependency graph...")
+	consoleOut(graph_messages[0])
 	fig, ax = plt.subplots()
 	fig.set_size_inches((9, 3))
 	yval = [ y for y in inp_data.step_avg_rate if str(y) != "nan"]
@@ -37,10 +49,10 @@ def main(argv):
 	ax.grid()
 	plt.legend()	
 	plt.savefig('threads_rate.png', dpi=100, bbox_inches="tight")
-	sys.stdout.write(" Done\n")
+	consoleOut(" Done\n")
 
 	# Thread - Average reply time graph
-	sys.stdout.write("Building Threads-Average reply time dependency graph...")
+	consoleOut(graph_messages[1])
 	fig, ax = plt.subplots()
 	fig.set_size_inches((9, 3))
 	yval = [ y for y in inp_data.step_avg_reply_time if y != -1]
@@ -51,10 +63,10 @@ def main(argv):
 	ax.grid()
 	plt.legend()	
 	plt.savefig('threads_avgrepltime.png', dpi=100, bbox_inches="tight")
-	sys.stdout.write(" Done\n")
+	consoleOut(" Done\n")
 	
-	sys.stdout.write("Building Threads-Errors dependency graph...")
 	# Thread - Errors time graph
+	consoleOut(graph_messages[2])
 	fig, ax1 = plt.subplots()
 	ax2 = ax1.twinx()
 
@@ -73,15 +85,16 @@ def main(argv):
 	ax1.legend(lns, lbls, loc=0)	
 	
 	plt.savefig('threads_errors.png', dpi=100, bbox_inches="tight")
-	sys.stdout.write(" Done\n")
+	consoleOut(" Done\n")
 
-	###############
+	#+++++++++++++#
 	# Time graphs #
-	###############    
+	#+++++++++++++#    
+
 	xval = [ x for x in inp_csv_data.total_time if x != -1]
 	
 	# Average Rate graph
-	sys.stdout.write("Building Time-Rate dependency graph...")
+	consoleOut(graph_messages[3])
 	fig, ax = plt.subplots()
 	fig.set_size_inches((9, 5))
 	ax.set_xlabel('Seconds elapsed (s)')
@@ -99,10 +112,10 @@ def main(argv):
 	lbls = [l.get_label() for l in lns]
 	ax1.legend(lns, lbls, loc=0)	
 	plt.savefig('time_avgrate.png', dpi=100, bbox_inches="tight")
-	sys.stdout.write(" Done\n")
+	consoleOut(" Done\n")
 
 	# Average reply time graph
-	sys.stdout.write("Building Time-Reply time dependency graph...")
+	consoleOut(graph_messages[3])
 	fig, ax = plt.subplots()
 	fig.set_size_inches((9, 5))
 	ax.set_xlabel('Seconds elapsed (s)')
@@ -120,10 +133,10 @@ def main(argv):
 	lbls = [l.get_label() for l in lns]
 	ax1.legend(lns, lbls, loc=0)	
 	plt.savefig('time_avgrepltime.png', dpi=100, bbox_inches="tight")
-	sys.stdout.write(" Done\n")
+	consoleOut(" Done\n")
 
 	# Maximum reply time graph
-	sys.stdout.write("Building Time-Maximum Reply time dependency graph...")
+	consoleOut(graph_messages[4])
 	fig, ax = plt.subplots()
 	fig.set_size_inches((9, 5))
 	ax.set_xlabel('Seconds elapsed (s)')
@@ -141,10 +154,10 @@ def main(argv):
 	lbls = [l.get_label() for l in lns]
 	ax1.legend(lns, lbls, loc=0)	
 	plt.savefig('time_maxrepltime.png', dpi=100, bbox_inches="tight")
-	sys.stdout.write(" Done\n")
+	consoleOut(" Done\n")
 
 	# Average errors graph
-	sys.stdout.write("Building Time-Errors time dependency graph...")
+	consoleOut(graph_messages[4])
 	fig, ax = plt.subplots()
 	fig.set_size_inches((9, 5))
 	ax.set_xlabel('Seconds elapsed (s)')
@@ -162,7 +175,12 @@ def main(argv):
 	lbls = [l.get_label() for l in lns]
 	ax1.legend(lns, lbls, loc=0)	
 	plt.savefig('time_errors.png', dpi=100, bbox_inches="tight")
-	sys.stdout.write(" Done\n")
+	consoleOut(" Done\n")
+
+
+def consoleOut(str):
+	sys.stdout.write(str)
+
 
 if __name__ == "__main__":
 	main(sys.argv[1:])
