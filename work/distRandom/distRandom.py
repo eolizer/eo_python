@@ -44,14 +44,14 @@ Script generates\n"""
     elif opt in ("-p", "--prefix"):
       file_prefix = arg
 
+  """ Open CSV size distribution file and read it to distRecords variable"""
   try:
     finp = open(inp_csv)
+    dist_records = csv.reader(finp, delimiter=',')
   except IOError, e:
     print "I/O Error ({0}): {1}". format(e.errno, e.strerror)
     sys.exit(2)
-
-       
-
+  
 # Run point
 if __name__ == "__main__":
    main(sys.argv[1:])
