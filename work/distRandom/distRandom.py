@@ -5,7 +5,10 @@ import sys
 import collections
 import getopt
 import csv
+import random
 
+seed = "1092384956781341341234656953214543219"
+words = open("lorem.txt", "r").read().replace("\n", '').split() 
 
 def randomData():
   a = collections.deque(words)
@@ -27,9 +30,6 @@ def main(argv):
 
 Script generates\n"""
   
-  seed = "1092384956781341341234656953214543219"
-  words = open("lorem.txt", "r").read().replace("\n", '').split() 
-
   # Get and check script parameters
   if not argv:
     print help_message
@@ -76,16 +76,14 @@ Script generates\n"""
   i = 1
   rdata = randomData()
   for perc_row in percentile_list:
-    print
-    
+    for fcount in range(perc_row["settings"]["files"]+1):
+      fout_name = out_path+"/"+file_prefix+str(i)+".html"
+      size = random.randint(int(perc_row["settings"]["minsize"]), int(perc_row["settings"]["maxsize"]))
+      fout = open(fout_name,'w')
+      while os.path.getsize(fout_name) < size:
+        fout.write(rdata.next())
+      i += 1
 
-  
-
-
-
-
-  print percentile_list
-  
 # Run point
 if __name__ == "__main__":
    main(sys.argv[1:])
