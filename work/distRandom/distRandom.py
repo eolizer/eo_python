@@ -7,6 +7,13 @@ import getopt
 import csv
 
 
+def randomData():
+  a = collections.deque(words)
+  b = collections.deque(seed)
+  while True:
+    yield ' '.join(list(a)[0:1024])
+    a.rotate(int(b[0]))
+    b.rotate(1)
 
 def main(argv):
   """ Main function """
@@ -19,6 +26,9 @@ def main(argv):
   help_message = """Usage: distRandom.py -d --distribcsv <distribution csv> -o --outpath <output path> -c --count <files count> --prefix <filename prefix>
 
 Script generates\n"""
+  
+  seed = "1092384956781341341234656953214543219"
+  words = open("lorem.txt", "r").read().replace("\n", '').split() 
 
   # Get and check script parameters
   if not argv:
@@ -61,8 +71,16 @@ Script generates\n"""
   for perc_row in percentile_list:
     pfiles = (file_count * int(perc_row["perc"]))/100
     perc_row["settings"]["files"] = pfiles
+
+  """ Generate files """
+  i = 1
+  rdata = randomData()
+  for perc_row in percentile_list:
+    print
+    
+
   
-  
+
 
 
 
