@@ -46,11 +46,27 @@ Script generates\n"""
 
   """ Open CSV size distribution file and read it to distRecords variable"""
   try:
-    finp = open(inp_csv)
+    finp = open(inp_csv,'rb')
     dist_records = csv.reader(finp, delimiter=',')
   except IOError, e:
     print "I/O Error ({0}): {1}". format(e.errno, e.strerror)
     sys.exit(2)
+  percentile_list = []
+  for row in dist_records:
+   percentile_list.append({"perc":row[0], "settings":{"minsize":row[1], "maxsize":row[2]}})
+
+  print percentile_list
+
+  """ Calculate number of files for each percentile """
+  for perc_row in percentile_list:
+    pfiles = (file_count * int(perc_row["perc"]))/100
+    perc_row["settings"]["files"] = pfiles
+  
+  
+
+
+
+  print percentile_list
   
 # Run point
 if __name__ == "__main__":
